@@ -1,61 +1,34 @@
-#include<iostream>
-#include<cstring>
-#include<queue>
-#include<stack>
-#include<map>
+#define _CRT_SECURE_NO_WARNINGS 1
+#define struct_size 10
+#define queue_size 5
+#pragma warning(disable:6031)
 
+#include <windows.h>
+#include<iostream>
+#include<string>
+#include<map>
 using namespace std;
 
-string s;
-queue<int> a;
-queue<char> b;
-map<char, int> m = { {'+',1},{'-',1},{'*',2},{'/',2} };
-
-int count() {
-	int	n = a.front();
-	int f = b.front();
-	a.pop();
-	b.pop();
-	while (a.size())
-	{
-		if (!b.size() || m[f] >= m[b.front()]) {
-			if (f == '+') n += a.front();
-			else if (f == '-')n -= a.front();
-			else if (f == '*')n *= a.front();
-			else n /= a.front();
-		}
-		else
-		{
-			a.push(n);
-			b.push(f);
-			n = a.front();
-		}
-		a.pop();
-		if (b.size())
-		{
-			f = b.front();
-			b.pop();
-		}
-	}
-	return n;
-}
-
+int ve[22][22],f[1048580][22];
 int main() {
-
-	while(1)
+	int n,a;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+		for (int q = 0; q < n; q++)
+			cin >> ve[i][q];
+	// f[(1 << i) | (1 << q)][q];
+	for (int i = 1; i <  1<<(n+1)-1; i++)
 	{
-		cin >> s;
-		for (int i = 0; s[i]; i++) {
-			if (s[i] < '9' && s[i]>'0')
-				a.push(s[i] - '0');
-			else
-				b.push(s[i]);
+
+		for (int q = 0; q < n; q++) {
+			if()
+			f[q][i] = 1000000000;
+			for (int j = 1; j < n; j++)
+			{
+				if (q & (1 << j))
+					f[q][i] = min(f[q][i], f[q][j] + ve[j][i]);
+			}
 		}
-
-		a.front() = 1;
-
-		cout << count() << endl;
 	}
-	return 0;
+			
 }
-
