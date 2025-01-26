@@ -16,19 +16,20 @@ int main() {
 	for (int i = 0; i < n; i++)
 		for (int q = 0; q < n; q++)
 			cin >> ve[i][q];
-	// f[(1 << i) | (1 << q)][q];
-	for (int i = 1; i <  1<<(n+1)-1; i++)
+	for(int i = 0; i < (1 << n) - 1; i ++)
+		f[i][0]= 1000000000;
+	for (int q = 3; q < (1 << n) - 1; q += 2)
 	{
-
-		for (int q = 0; q < n; q++) {
-			if()
-			f[q][i] = 1000000000;
-			for (int j = 1; j < n; j++)
+		for (int i = 1; i < n; i++) {
+			if(q & (1 << i))
 			{
-				if (q & (1 << j))
-					f[q][i] = min(f[q][i], f[q][j] + ve[j][i]);
+				f[q][i] = 1000000000;
+				for (int j = 0; j < n; j++)
+				{
+					f[q][i] = min(f[q][i], f[q ^ (1 << j)][j] + ve[j][i]);
+				}
 			}
 		}
 	}
-			
+	cout << f[(1 << n ) - 1][n - 1];
 }
