@@ -18,13 +18,11 @@
     <ClCompile Include="源.cpp">
       <Filter>头文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\文档\论文作业\数据结构课设\Calculators.cpp">
-      <Filter>头文件</Filter>
+    <ClCompile Include="oldAlgorithmCode.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="源.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
+    <ClCompile Include="..\..\文档\论文作业\数据结构课设\Calculators.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

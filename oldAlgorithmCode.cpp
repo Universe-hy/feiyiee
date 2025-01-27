@@ -1,19 +1,13 @@
-#define _CRT_SECURE_NO_WARNINGS 1
-#define struct_size 10
-#define queue_size 5
-#pragma warning(disable:6031)
-
-#include <windows.h>
 #include<iostream>
 #include <stdlib.h>
 #include<string>
 #include<map>
 using namespace std;
 
-int ve[22][22],f[1048580][22];
+int ve[22][22], f[1048580][22];
 
-int main() {
-	int n,a;
+int AcWing91() {
+	int n, a;
 	cin >> n;
 	for (int i = 0; i < n; i++)
 		for (int q = 0; q < n; q++)
@@ -23,7 +17,7 @@ int main() {
 	{
 		//以i 为结尾
 		for (int i = 0; i < n; i++) {
-			f[q][i] = 1000;
+			f[q][i] = 1000000000;
 			if (i && (q & (1 << i)))
 			{
 				//j 为上一个结尾
@@ -36,5 +30,5 @@ int main() {
 		}
 	}
 
-	cout << f[(1 << n ) - 1][n - 1];
+	cout << f[(1 << n) - 1][n - 1];
 }
