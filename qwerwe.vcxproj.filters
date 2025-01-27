@@ -18,7 +18,7 @@
     <ClCompile Include="源.cpp">
       <Filter>头文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\文档\论文作业\数据结构课设\计算机.cpp">
+    <ClCompile Include="..\..\文档\论文作业\数据结构课设\Calculators.cpp">
       <Filter>头文件</Filter>
     </ClCompile>
   </ItemGroup>
