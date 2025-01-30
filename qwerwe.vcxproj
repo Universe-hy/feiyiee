@@ -128,9 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="StudentCourseSelectionManagementSystem.txt" />
     <ClCompile Include="源.cpp" />
-    <ClCompile Include="计算机.txt" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="oldAlgorithmCode.txt" />

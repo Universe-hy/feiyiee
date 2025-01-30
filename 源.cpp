@@ -10,7 +10,7 @@
 #include<map>
 using namespace std;
 
-int f1[12][1<<12];
+long long int f[12][1<<12];
 int n, m;
 int cheak(int a) {
 	int fig = 0;
@@ -26,6 +26,8 @@ int cheak(int a) {
 }
 
 int main() {
+	
+
 	while(cin>>n>>m,n||m)
 	{
 		if(n==0)
@@ -34,22 +36,22 @@ int main() {
 			cout << !(m &1 ) << endl;
 		}
 		else {
-			for (int w = 0; w < 1 << m; w++)
-				f1[1][w] = cheak(w);
+			for (int i = 0; i < (1 << m); i++)
+				f[1][i]= cheak(i);
 
 			for (int i = 2; i < n; i++) {
-				for (int q = 0; q < 1 << m; q++) {
-					if (cheak(q))
-						for (int w = 0; w < 1 << m; w++) {
-							if (!(q & w) && cheak(q | w)) {
-								f1[i][q] += f1[i - 1][w];
-							}
+				for (int q = 0; q < (1 << m); q++) {
+					for (int w = 0; w < (1 << m); w++) {
+						if (!(q & w) && f[1][q | w]) {
+							f[i][q] += f[i - 1][w];
 						}
+					}
 				}
 			}
-			int ans = 0;
-			for (int w = 0; w < 1 << m; w++)
-				ans += f1[n - 1][w];
+			long long int ans = 0;
+			for (int w = 0; w < (1 << m); w++)
+				if(w&& f[1][w])
+					ans += f[n - 1][w];
 			cout << ans << endl;
 		}
 	}

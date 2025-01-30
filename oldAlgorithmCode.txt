@@ -4,7 +4,7 @@
 #include<map>
 using namespace std;
 
-int ve[22][22], f[1048580][22];
+int ve91[22][22], f91[1048580][22];
 
 int AcWing91() {
 	int n;
