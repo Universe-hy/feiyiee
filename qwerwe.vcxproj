@@ -128,9 +128,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\文档\论文作业\数据结构课设\Calculators.cpp" />
-    <ClCompile Include="oldAlgorithmCode.cpp" />
+    <ClCompile Include="StudentCourseSelectionManagementSystem.txt" />
     <ClCompile Include="源.cpp" />
+    <ClCompile Include="计算机.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="oldAlgorithmCode.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

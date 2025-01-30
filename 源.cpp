@@ -10,31 +10,47 @@
 #include<map>
 using namespace std;
 
-int ve[22][22],f[1048580][22];
+int f1[12][1<<12];
+int n, m;
+int cheak(int a) {
+	int fig = 0;
+	for (int i = 0; i < m; i++) {
+		if (a & 1) {
+			if (fig & 1)return 0;
+			fig = 0;
+		}else fig++;
+		a >>= 1;
+	}
+	if (fig & 1)return 0;
+	return 1;
+}
 
 int main() {
-	int n,a;
-	cin >> n;
-	for (int i = 0; i < n; i++)
-		for (int q = 0; q < n; q++)
-			cin >> ve[i][q];
-	//q 为取数状态
-	for (int q = 3; q < (1 << n); q += 2)
+	while(cin>>n>>m,n||m)
 	{
-		//以i 为结尾
-		for (int i = 0; i < n; i++) {
-			f[q][i] = 1000;
-			if (i && (q & (1 << i)))
-			{
-				//j 为上一个结尾
-				for (int j = 0; j < n; j++)
-				{
-					if ((q & (1 << j)) && j != i)
-						f[q][i] = min(f[q][i], f[q ^ (1 << i)][j] + ve[j][i]);
+		if(n==0)
+			cout << 0 << endl;
+		else if (n == 1) {
+			cout << !(m &1 ) << endl;
+		}
+		else {
+			for (int w = 0; w < 1 << m; w++)
+				f1[1][w] = cheak(w);
+
+			for (int i = 2; i < n; i++) {
+				for (int q = 0; q < 1 << m; q++) {
+					if (cheak(q))
+						for (int w = 0; w < 1 << m; w++) {
+							if (!(q & w) && cheak(q | w)) {
+								f1[i][q] += f1[i - 1][w];
+							}
+						}
 				}
 			}
+			int ans = 0;
+			for (int w = 0; w < 1 << m; w++)
+				ans += f1[n - 1][w];
+			cout << ans << endl;
 		}
 	}
-
-	cout << f[(1 << n ) - 1][n - 1];
 }
