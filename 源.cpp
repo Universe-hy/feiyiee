@@ -21,8 +21,7 @@ int cheak(int a) {
 		}else fig++;
 		a >>= 1;
 	}
-	if (fig & 1)return 0;
-	return 1;
+	return !(fig & 1);
 }
 
 int main() {
@@ -30,9 +29,7 @@ int main() {
 
 	while(cin>>n>>m,n||m)
 	{
-		if(n==0)
-			cout << 0 << endl;
-		else if (n == 1) {
+		if (n == 1) {
 			cout << !(m &1 ) << endl;
 		}
 		else {
@@ -41,6 +38,7 @@ int main() {
 
 			for (int i = 2; i < n; i++) {
 				for (int q = 0; q < (1 << m); q++) {
+					f[i][q] = 0;
 					for (int w = 0; w < (1 << m); w++) {
 						if (!(q & w) && f[1][q | w]) {
 							f[i][q] += f[i - 1][w];
