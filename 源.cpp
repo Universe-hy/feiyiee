@@ -10,35 +10,33 @@
 #include<map>
 #include<queue>
 using namespace std;
-const int N = 6010;
-int v[N],f[N],g[N],rs1[N],rs2[N];
-queue<int> hod;
+const int N = 310;
+int v[N][N],f[N][N],rs[N][N];
+int r, c;
+int dfs(int a,int b) {
+	if (a - 1 >= 0 && v[a - 1][b] < v[a][b])
+		rs[a][b] = max(rs[a][b], rs[a - 1][b] ? rs[a - 1][b] : dfs(a - 1, b));
+	if (b - 1 >= 0 && v[a][b - 1] < v[a][b])
+		rs[a][b] = max(rs[a][b], rs[a][b - 1] ? rs[a][b - 1] : dfs(a, b - 1));
+	if (a + 1 < r && v[a + 1][b] < v[a][b])
+		rs[a][b] = max(rs[a][b], rs[a + 1][b] ? rs[a + 1][b] : dfs(a + 1, b));
+	if (b + 1 < c && v[a][b + 1] < v[a][b])
+		rs[a][b] = max(rs[a][b], rs[a][b + 1] ? rs[a][b + 1] : dfs(a, b + 1));
+	rs[a][b]++;
+	return rs[a][b];
+}
 
 int main() {
-	int n, a, b;
-	scanf("%d", &n);
-	for (int i = 1; i <= n; i++)
-		scanf("%d", &v[i]);
-	for (int i = 1; i < n; i++) {
-		scanf("%d %d", &a, &b);
-		f[a] = b; g[b]++;
-	}
-
-	for (int i = 1; i <=n; i++)
-		if (!g[i]) hod.push(i);
-
-	while (1) {
-		a = hod.front();
-		rs1[a] += v[a];
-		if (f[a] == 0)break;
-		hod.pop();
-		rs1[f[a]] += rs2[a];
-		rs2[f[a]] += max(rs1[a],rs2[a]);
-		g[f[a]]--;
-		if(g[f[a]]==0)
-			hod.push(f[a]);
-	}
-	cout << max(rs1[hod.front()],rs2[hod.front()]);
+	scanf("%d %d", &r,&c);
+	for (int i = 0; i <r; i++)
+		for (int q = 0; q < c; q++)
+		{
+			scanf("%d", &v[i][q]);
+		}
+	int ans = 0;
+	for (int i = 0; i < r; i++)
+		for (int q = 0; q < c; q++)
+			ans=max(ans, rs[i][q] ? rs[i][q] : dfs(i, q));	
 	return 0;
 }
 
