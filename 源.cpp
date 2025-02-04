@@ -12,29 +12,28 @@
 #include<queue>
 
 using namespace std;
-void divide(int x)
-{
-    for (int i = 2; i <= x / i; i++)
-        if (x % i == 0)
-        {
-            int s = 0;
-            while (x % i == 0) x /= i, s++;
-            cout << i << ' ' << s << endl;
-        }
-    if (x > 1) cout << x << ' ' << 1 << endl;
-    cout << endl;
-}
+const int N = 100010;
+int a[N];
 
 int main()
 {
     int n;
+    long long int dis = 0;
     cin >> n;
-    while (n--)
-    {
-        int x;
-        cin >> x;
-        divide(x);
+    int b;
+    for (int i = 0; i < n; i++) {
+        cin >> b;
+        dis += b;
+        a[b]++;
     }
-
+    int r = a[0], l = n - a[0];
+    long long int ans = dis;
+    for (int i = 1; i < 40050; i++) {
+        dis += -l + r;
+        l -= a[i];
+        r += a[i];
+        ans = min(ans, dis);
+    }
+    cout << ans;
     return 0;
 }
