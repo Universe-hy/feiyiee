@@ -11,29 +11,33 @@
 
 using namespace std;
 const int N = 10010;
-int a[N],idx;
+long long int a[N], idx;
 
-void swap(int x,int y) {
-    a[x] += a[y];
-    a[y] = a[x] - a[y];
-    a[x] -= a[y];
+void swap(int x, int y) {
+    long long int z = a[x];
+    a[x] = a[y];
+    a[y] = z;
 }
 
-void up(int x) {
-    if (a[x / 2] > a[x]) {
-        swap(x / 2, x);
-        if(x/2)up(x / 2);
-    }
-}
+
 void down(int x) {
-    if (x * 2 <= idx && (x * 2 + 1 > idx || a[x * 2] < a[x * 2 + 1]) && a[x * 2] < a[x]) {
-        swap(x * 2, x);
-        down(x * 2);
+    int t = x;
+    if (x * 2 <= idx && a[x * 2] < a[t])t = x * 2;
+    if (x * 2 + 1 <= idx && a[x * 2 + 1] < a[t])t = x * 2 + 1;
+    if (t != x)
+    {
+        swap(t, x);
+        down(t);
     }
-    else if (x * 2+1 <= idx && a[x * 2] > a[x * 2 + 1] && a[x * 2 + 1] < a[x]) {
-        swap(x * 2+1, x);
-        down(x * 2+1);
-    }
+
+    // if (x * 2 <= idx && (x * 2 + 1 > idx || a[x * 2] < a[x * 2 + 1]) && a[x * 2] < a[x]) {
+    //     swap(x * 2, x);
+    //     down(x * 2);
+    // }
+    // else if (x * 2+1 <= idx && a[x * 2] > a[x * 2 + 1] && a[x * 2 + 1] < a[x]) {
+    //     swap(x * 2+1, x);
+    //     down(x * 2+1);
+    // }
 }
 
 void pop() {
@@ -44,19 +48,21 @@ void pop() {
 }
 int main()
 {
-    int k = 260332759;
     int n;
     cin >> n;
     idx = n;
     for (int i = 1; i <= n; i++) cin >> a[i];
-    for (int i = n; i >0; i--)  up(i);
-    int b,ans=0;
-    while (idx != 1) {
-        b = a[1]; pop();
-        b += a[1]; pop();
+    for (int i = idx / 2; i; i--)
+        down(i);
+    long long int ans = 0;
+    while (idx > 1) {
+        long long int b = a[1]; pop();
+        b += a[1];
+
         ans += b;
-        a[++idx] = b;
-        up(idx);
+
+        a[1] = b;
+        down(1);
     }
     cout << ans;
     return 0;
