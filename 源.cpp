@@ -11,29 +11,49 @@
 
 using namespace std;
 const int N = 10010;
-priority_queue<int,vector<int>,greater<int> > a;
+
+typedef pair<int, int> PII;
+vector<PII> a;
 
 
 int main()
 {
+    int s,t;
+    cin >> s>>t;
     int n;
     cin >> n;
-    
-    int k;
     for (int i = 1; i <= n; i++) {
-        cin >> k;
-        a.push(k);
+        int x, y;
+        cin >> x >> y;
+        a.push_back({ x, y });
     }
+    sort(a.begin(), a.end());
 
-    long long int ans = 0;
-    while (a.size() > 1) {
-        int b = a.top();
-        a.pop();
-        b += a.top(); 
-        a.pop();
-        a.push(b);
-        ans += b;
+    int l = s;
+    int r = -1000000000;
+    int ans = 1;
+    for (int i = 0; i < n; i++) {
+        if (a[i].first <= l) {
+            if (r < a[i].second)
+            {
+                r = a[i].second;
+                if(t<=r)
+                {
+                    cout << ans;
+                    return 0;
+                }
+            }
+        }
+        else if ( a[i].first<=r ) {
+            l = r;
+            ans++;
+            i--;
+        }
+        else {
+            cout << -1;
+            return 0;
+        }
     }
-    cout << ans;
+    cout <<  -1;   
     return 0;
 }
