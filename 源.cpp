@@ -25,12 +25,15 @@ int main()
         a.push_back({ x, y });
     }
     sort(a.begin(), a.end());
-
+    int r=-1000000010,ans=0;
     for (int i = 0; i < n; i++) {
-        if (group.size() && group.top() < a[i].first)
-            group.pop();
-        group.push(a[i].second);
+        if (a[i].second < r)
+            r = a[i].second;
+        else if (r < a[i].first) {
+            ans++;
+            r = a[i].second;
+        }
     }
-    cout << group.size();
+    cout << ans;
     return 0;
 }
