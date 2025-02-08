@@ -11,58 +11,28 @@
 
 using namespace std;
 const int N = 10010;
-long long int a[N], idx;
-
-void swap(int x, int y) {
-    long long int z = a[x];
-    a[x] = a[y];
-    a[y] = z;
-}
+priority_queue<int,vector<int>,greater<int> > a;
 
 
-void down(int x) {
-    int t = x;
-    if (x * 2 <= idx && a[x * 2] < a[t])t = x * 2;
-    if (x * 2 + 1 <= idx && a[x * 2 + 1] < a[t])t = x * 2 + 1;
-    if (t != x)
-    {
-        swap(t, x);
-        down(t);
-    }
-
-    // if (x * 2 <= idx && (x * 2 + 1 > idx || a[x * 2] < a[x * 2 + 1]) && a[x * 2] < a[x]) {
-    //     swap(x * 2, x);
-    //     down(x * 2);
-    // }
-    // else if (x * 2+1 <= idx && a[x * 2] > a[x * 2 + 1] && a[x * 2 + 1] < a[x]) {
-    //     swap(x * 2+1, x);
-    //     down(x * 2+1);
-    // }
-}
-
-void pop() {
-    a[1] = a[idx];
-    a[idx] = 0;
-    idx--;
-    down(1);
-}
 int main()
 {
     int n;
     cin >> n;
-    idx = n;
-    for (int i = 1; i <= n; i++) cin >> a[i];
-    for (int i = idx / 2; i; i--)
-        down(i);
+    
+    int k;
+    for (int i = 1; i <= n; i++) {
+        cin >> k;
+        a.push(k);
+    }
+
     long long int ans = 0;
-    while (idx > 1) {
-        long long int b = a[1]; pop();
-        b += a[1];
-
+    while (a.size() > 1) {
+        int b = a.top();
+        a.pop();
+        b += a.top(); 
+        a.pop();
+        a.push(b);
         ans += b;
-
-        a[1] = b;
-        down(1);
     }
     cout << ans;
     return 0;
