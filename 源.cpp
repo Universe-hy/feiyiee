@@ -10,7 +10,7 @@
 #include<queue>
 
 using namespace std;
-const int N = 10010;
+const int N = 100010;
 
 typedef pair<int, int> PII;
 vector<PII> a;
@@ -25,15 +25,15 @@ int main()
         a.push_back({ x, y });
     }
     sort(a.begin(), a.end());
+
     int r=-1000000010,ans=0;
-    for (int i = 0; i < n; i++) {
-        if (a[i].second < r)
-            r = a[i].second;
-        else if (r < a[i].first) {
+    for (int i = 0; i < n; i++) 
+        if (r <a[i].first ) {
             ans++;
             r = a[i].second;
-        }
-    }
+        }else if (a[i].second < r) 
+            r = a[i].second;
     cout << ans;
     return 0;
 }
+
