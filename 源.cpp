@@ -10,50 +10,72 @@
 #include<queue>
 
 using namespace std;
-const int N = 100010;
+const int N = 10000010;
 
-int a[N];
-void sort_swap(int x, int y) {
-    if (x == y)return;
-    a[x] += a[y];
-    a[y] = a[x] - a[y];
-    a[x] -= a[y];
+int a[N],idx;
+
+void down(int x) {
+    int t=x;
+    if (2 * x <= idx && a[t] < a[2 * x])t = x * 2;
+    if (x * 2 + 1 <= idx && a[t] < a[x * 2 + 1])t = x * 2 + 1;
+    if (t ^ x)
+    {
+        swap(a[t], a[x]);
+        down(t);
+    }
+
 }
 
-void sort_quick(int x,int y) {
-    if (x >= y)return;
-    int k = a[x];
-
-    int l = x;
-    for (int i = x + 1; i <= y; i++) {
-        if (a[i] < k) {
-            sort_swap(++l, i);
-        }
+void up(int x) {
+    if (x / 2 && a[x / 2] < a[x]) {
+        swap(a[x/2], a[x]);
+        up(x / 2);
     }
-    sort_swap(x, l);
-    sort_quick(x, l-1);
-    sort_quick(l+1, y);
+}
+void pop() {
+    a[1] = a[idx];
+    a[idx--] = 0;
+    down(1);
+}
+
+void push(int x) {
+    a[++idx] = x;
+    up(idx);
+}
+int cmp1(int x, int y) {
+    return x > y;
 }
 int main()
 {
-    int n;
-    cin >> n;
-    for (int i = 0; i < n; i++) {
+    int n,m,q,u,v,t;
+    scanf("%d %d %d %d %d %d", &n, &m, &q, &u, &v, &t);
+    for (int i = 1; i <= n; i++) {
         scanf("%d", &a[i]);
     }
-    sort_quick(0, n - 1);
-    int k = a[0], ans = 1;
-    a[n] = -1;
-    for (int i = 1; i <= n; i++) {
-        if (a[i] ^ k) {
-            printf("%d %d\n", k, ans);
-            k = a[i];
-            ans = 1;
+    idx = n;
+    for (int i = n / 2; i; i--)
+        down(i);
+
+    int rise = 0;
+    for (int i = 1; i <= m; i++) {
+        int x = a[1]+rise;
+        pop();
+        long long int xa = (long long)x * u / v;
+        int xb = x - xa;
+        if (i % t == 0) {
+            printf("%d ", x);
         }
-        else {
-            ans++;
-        }
+        rise += q;
+        push(xa - rise);
+        push(xb - rise);
     }
+    printf("\n");
+
+    sort(a+1, a + n + m+1,cmp1);
+    for (int i = t; i <= n + m; i += t) {
+        printf("%d ", a[i]+rise);
+    }
+    
     return 0;
 }
 
