@@ -12,70 +12,53 @@
 using namespace std;
 const int N = 10000010;
 
-int a[N],idx;
+queue<int> a[3];
+int b[N];
 
-void down(int x) {
-    int t=x;
-    if (2 * x <= idx && a[t] < a[2 * x])t = x * 2;
-    if (x * 2 + 1 <= idx && a[t] < a[x * 2 + 1])t = x * 2 + 1;
-    if (t ^ x)
-    {
-        swap(a[t], a[x]);
-        down(t);
-    }
+int maxa() {
+    int t=0;
+    for (int i = 0; i < 3; i++) 
+        if (a[i].size()) {
+            t = i;
+            break;
+        }
+    for (int i = t+1; i < 3; i++) 
+        if (a[i].size() && a[i].front() > a[t].front())
+            t = i;
+    int res = a[t].front();
+    a[t].pop();
+    return res;
 
-}
-
-void up(int x) {
-    if (x / 2 && a[x / 2] < a[x]) {
-        swap(a[x/2], a[x]);
-        up(x / 2);
-    }
-}
-void pop() {
-    a[1] = a[idx];
-    a[idx--] = 0;
-    down(1);
-}
-
-void push(int x) {
-    a[++idx] = x;
-    up(idx);
-}
-int cmp1(int x, int y) {
-    return x > y;
 }
 int main()
 {
     int n,m,q,u,v,t;
     scanf("%d %d %d %d %d %d", &n, &m, &q, &u, &v, &t);
-    for (int i = 1; i <= n; i++) {
-        scanf("%d", &a[i]);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &b[i]);
     }
-    idx = n;
-    for (int i = n / 2; i; i--)
-        down(i);
-
+    sort(b, b + n + m, greater <int>() );
+    for (int i = 0; i < n; i++) {
+        a[0].push(b[i]);
+    }
     int rise = 0;
     for (int i = 1; i <= m; i++) {
-        int x = a[1]+rise;
-        pop();
+        int x = maxa()+rise;
         long long int xa = (long long)x * u / v;
         int xb = x - xa;
         if (i % t == 0) {
             printf("%d ", x);
         }
         rise += q;
-        push(xa - rise);
-        push(xb - rise);
+        a[1].push(xa - rise);
+        a[2].push(xb - rise);
     }
     printf("\n");
-
-    sort(a+1, a + n + m+1,cmp1);
-    for (int i = t; i <= n + m; i += t) {
-        printf("%d ", a[i]+rise);
+    for (int i = 0; i < n + m; i ++) {
+        int k = maxa()+rise;
+        if ((i + 1) % t == 0)
+            printf("%d ", k);
     }
-    
     return 0;
 }
 
