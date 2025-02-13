@@ -12,11 +12,19 @@
 using namespace std;
 const int N = 10000010;
 int h[N], ne[N], e[N], idx=1,d[N];
+struct link
+{
+    int a, b;
+	bool operator<(const link& t) const
+	{
+        return ((a == t.a) ? (b > t.b) : (a < t.a));
+	}
+}lin[N*2];
+
 
 void add(int a, int b) {
     ne[idx] = h[a], h[a] = idx, e[idx++] = b;
-    ne[idx] = h[b], h[b] = idx, e[idx++] = a;
-    d[a]++; d[b]++;
+    d[a]++;
 }
 
 
@@ -38,9 +46,14 @@ int main()
     {
         int a, b;
         scanf("%d %d", &a, &b);
-        add(a, b);
+        lin[i * 2].a = a;
+		lin[i * 2].b = b;
+        lin[i * 2+1].a = b;
+        lin[i * 2+1].b = a;
     }
-
+	sort(lin, lin + m*2);
+	for (int i = 0; i < m*2; i++)
+		add(lin[i].a, lin[i].b);
     dfs(1);
 }
 
