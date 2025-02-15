@@ -27,6 +27,9 @@ void add(int a, int b) {
     d[a]++;
 }
 
+int idx1 = 0, st[N];
+int notring = 1, be;
+int maxcut=1e9;
 
 void dfs(int a) {
     int id = h[a];
@@ -34,8 +37,41 @@ void dfs(int a) {
     printf("%d ", a);
     while (id) {
         if (d[e[id]])
-            dfs(e[id]);
+        {
+            if (notring || !(st[e[id]] > st[be] && e[id] > maxcut))
+            {
+                if (st[a] >= st[be] && st[e[id]] > st[be] && ne[id])
+                    maxcut = e[ne[id]];
+                dfs(e[id]);
+            }
+            else notring = 1;
+        }
         id = ne[id];
+    }
+}
+
+void fingring(int a) {
+    st[a] = ++idx1;
+    int id = h[a];
+    if (idx1 - 1 && st[e[id]] == idx1 - 1)
+        id = ne[id];
+    while (id && notring) {
+        if (!st[e[id]])
+        {
+            fingring(e[id]);
+        }
+        else {
+            notring = 0;
+            be= e[id];
+        }
+        id = ne[id];
+        if (idx1 - 1 && st[e[id]] == idx1 - 1)
+            id = ne[id];
+    }
+	if (notring)
+    {
+        st[a] = 0;
+        idx1--;
     }
 }
 int main()
@@ -54,6 +90,6 @@ int main()
 	sort(lin, lin + m*2);
 	for (int i = 0; i < m*2; i++)
 		add(lin[i].a, lin[i].b);
+    fingring(1);
     dfs(1);
 }
-
