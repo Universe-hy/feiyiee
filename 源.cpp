@@ -10,86 +10,98 @@
 #include<queue>
 
 using namespace std;
-const int N = 10000010;
-int h[N], ne[N], e[N], idx=1,d[N];
-struct link
+typedef long long int ll;
+
+int a[90];
+int dp[90][90];
+int re[80] = { 1 };
+struct LongInt
 {
-    int a, b;
-	bool operator<(const link& t) const
-	{
-        return ((a == t.a) ? (b > t.b) : (a < t.a));
-	}
-}lin[N*2];
-
-
-void add(int a, int b) {
-    ne[idx] = h[a], h[a] = idx, e[idx++] = b;
-    d[a]++;
-}
-
-int idx1 = 0, st[N];
-int notring = 1, be;
-int maxcut=1e9;
-
-void dfs(int a) {
-    int id = h[a];
-    d[a] = 0;
-    printf("%d ", a);
-    while (id) {
-        if (d[e[id]])
-        {
-            if (notring || !(st[e[id]] > st[be] && e[id] > maxcut))
-            {
-                if (st[a] >= st[be] && st[e[id]] > st[be] && ne[id])
-                    maxcut = e[ne[id]];
-                dfs(e[id]);
-            }
-            else notring = 1;
-        }
-        id = ne[id];
-    }
-}
-
-void fingring(int a) {
-    st[a] = ++idx1;
-    int id = h[a];
-    if (idx1 - 1 && st[e[id]] == idx1 - 1)
-        id = ne[id];
-    while (id && notring) {
-        if (!st[e[id]])
-        {
-            fingring(e[id]);
-        }
-        else {
-            notring = 0;
-            be= e[id];
-        }
-        id = ne[id];
-        if (idx1 - 1 && st[e[id]] == idx1 - 1)
-            id = ne[id];
-    }
-	if (notring)
+    ll a[80];
+    ll M = 100;
+    bool operator<(const LongInt& t) const
     {
-        st[a] = 0;
-        idx1--;
+        if (a[0] != t.a[0])
+            return a[0] < t.a[0];
+        for (int i = a[0]; i > 0; i--) {
+            if (a[i] != t.a[i])
+                return a[i] < t.a[i];
+        }
+        return 0;
     }
-}
+
+    LongInt operator+(const LongInt& t) const
+    {
+        struct LongInt ans;
+        ans.a[0] = max(a[0], t.a[0]);
+        ll ji=0;
+        
+        for (int i = 1; i <= ans.a[0] ; i++) {
+            ans.a[i] = a[i] + t.a[i]+ji;
+            ji = ans.a[i] / M;
+            ans.a[i] %= M;
+        }
+        if (ji) {
+            ans.a[0]++;
+            ans.a[ans.a[0]] = ji;
+        }
+        return ans;
+    }
+
+    /*LongInt operator+=(const LongInt& t) const
+    {
+        a[0] = max(a[0], t.a[0]);
+        ll ji = 0;
+
+        for (int i = 1; i <= a[0]; i++) {
+            a[i] = a[i] + t.a[i] + ji;
+            ji = a[i] / M;
+            a[i] %= M;
+        }
+        if (ji) {
+            a[0]++;
+            a[a[0]] = ji;
+        }
+    }*/
+}lin[2];
 int main()
 {
-    int n, m;
+    struct LongInt k,t ;
+    k.a[0] = 2;
+
+    k.a[1] = 94;
+    k.a[2] = 94;
+    //k.a[3] = 98;
+
+    t.a[0] = 2;
+    t.a[1] = 98;
+    t.a[2] = 98;
+    //t.a[3] = 98;
+    k = k + t;
+    int ak=0;
+
+    
+
+    /*int n, m;
     scanf("%d %d", &n, &m);
-    for (int i = 0; i < m; i++)
-    {
-        int a, b;
-        scanf("%d %d", &a, &b);
-        lin[i * 2].a = a;
-		lin[i * 2].b = b;
-        lin[i * 2+1].a = b;
-        lin[i * 2+1].b = a;
+    int ans = 0;
+    for (int i = 1; i <= m; i++) {
+        re[i] = re[i - 1] * 2;
     }
-	sort(lin, lin + m*2);
-	for (int i = 0; i < m*2; i++)
-		add(lin[i].a, lin[i].b);
-    fingring(1);
-    dfs(1);
+    for (int k = 0; k < n; k++) {
+        for (int i = 1; i <= m; i++)
+            scanf("%d", &a[i]);
+
+        for (int i = 1; i <= m; i++) {
+            for (int q = 1; q <= i+1; q++) {
+                dp[i][q] = max(dp[i - 1][q - 1] + a[q - 1] * re[i], dp[i - 1][q] + a[q+m-i]*re[i]);
+            }
+        }
+        int count = 0;
+        for (int i = 0; i <= m; i++) {
+            count = max(count,dp[m][i]);
+        }
+        ans += count;
+    }
+    printf("%d", ans);*/
 }
