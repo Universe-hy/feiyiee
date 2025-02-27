@@ -8,17 +8,14 @@
 #include<string>
 #include<map>
 #include<queue>
-
 using namespace std;
 typedef long long int ll;
 
-int a[90];
-int dp[90][90];
-int re[80] = { 1 };
 struct LongInt
 {
-    ll a[80];
-    ll M = 100;
+    ll a[101] = {0};
+    ll M = 1000000000;
+    int K = 9;//注意put中缩进的修改
     bool operator<(const LongInt& t) const
     {
         if (a[0] != t.a[0])
@@ -32,76 +29,95 @@ struct LongInt
 
     LongInt operator+(const LongInt& t) const
     {
-        struct LongInt ans;
+        struct LongInt ans = { 0 };
         ans.a[0] = max(a[0], t.a[0]);
-        ll ji=0;
-        
+            
         for (int i = 1; i <= ans.a[0] ; i++) {
-            ans.a[i] = a[i] + t.a[i]+ji;
-            ji = ans.a[i] / M;
+            if(i<=a[0])
+                ans.a[i]+= a[i];
+            if (i <= t.a[0])
+                ans.a[i] += t.a[i];
+            ans.a[i+1] += ans.a[i] / M;
             ans.a[i] %= M;
         }
-        if (ji) {
+        if (ans.a[ans.a[0]+1]) {
             ans.a[0]++;
-            ans.a[ans.a[0]] = ji;
         }
         return ans;
     }
 
-    /*LongInt operator+=(const LongInt& t) const
+    LongInt operator*(const LongInt& t) const
     {
-        a[0] = max(a[0], t.a[0]);
-        ll ji = 0;
-
+        struct LongInt ans = { 0 };
+        ans.a[0] = a[0] + t.a[0] -!(a[a[0]]*t.a[t.a[0]]/M);
+        
         for (int i = 1; i <= a[0]; i++) {
-            a[i] = a[i] + t.a[i] + ji;
-            ji = a[i] / M;
-            a[i] %= M;
+            for (int j = 1; j <= t.a[0]; j++) {
+                ans.a[i + j -1] += a[i] * t.a[j];
+                ans.a[i + j] += ans.a[i + j - 1] / M;
+                ans.a[i + j - 1] %= M;
+            }
         }
-        if (ji) {
-            a[0]++;
-            a[a[0]] = ji;
+        return ans;
+    }
+    // 45 134 643 723 563 4  //23 273
+    void stingInit(string str) {
+        a[0] = str.size() / K + (str.size() % K ? 1 : 0);
+        for (int i = 1; i<= a[0]; i++) {
+            ll num = 0;
+            for (int q = 0; q < K; q++) {
+                num *= 10;
+                if ((int)str.size() - i * K + q >= 0)
+                    num += str[str.size() - i * K + q] - '0';
+            }
+            a[i] = num;
         }
-    }*/
-}lin[2];
+    }
+
+    void put() {
+        printf("%lld", a[a[0]]);
+        for (int i = a[0]-1; i > 0; i--)
+            printf("%09lld", a[i]);
+    }
+};
+struct LongInt a[82];
+struct LongInt dp[82][82];
+struct LongInt r[82] = { 1,1 };
 int main()
-{
-    struct LongInt k,t ;
-    k.a[0] = 2;
-
-    k.a[1] = 94;
-    k.a[2] = 94;
-    //k.a[3] = 98;
-
-    t.a[0] = 2;
-    t.a[1] = 98;
-    t.a[2] = 98;
-    //t.a[3] = 98;
-    k = k + t;
-    int ak=0;
-
-    
-
-    /*int n, m;
+{  
+    int n, m;
     scanf("%d %d", &n, &m);
-    int ans = 0;
+    struct LongInt ans = {0};
+    struct LongInt re = {0};
+    re.a[0] = 1;
+    re.a[1] = 2;
     for (int i = 1; i <= m; i++) {
-        re[i] = re[i - 1] * 2;
+        r[i] = r[i - 1] * re;
     }
     for (int k = 0; k < n; k++) {
         for (int i = 1; i <= m; i++)
-            scanf("%d", &a[i]);
+        {
+            a[i].a[0] = 1;
+            scanf("%lld", &a[i].a[1]);
+        }
 
         for (int i = 1; i <= m; i++) {
             for (int q = 1; q <= i+1; q++) {
-                dp[i][q] = max(dp[i - 1][q - 1] + a[q - 1] * re[i], dp[i - 1][q] + a[q+m-i]*re[i]);
+                dp[i][q] = {0};
+                struct LongInt re1 = a[q - 1] * r[i] + dp[i - 1][q - 1];
+                struct LongInt re2 = a[q + m - i] * r[i] + dp[i - 1][q];
+                if (re1 < re2)
+                    dp[i][q] = re2;
+                else
+                    dp[i][q] = re1;
             }
         }
-        int count = 0;
+        struct LongInt count = {0};
         for (int i = 0; i <= m; i++) {
-            count = max(count,dp[m][i]);
+            if(count<dp[m][i])
+                count = dp[m][i];
         }
-        ans += count;
+        ans = ans + count;
     }
-    printf("%d", ans);*/
+    ans.put();
 }
