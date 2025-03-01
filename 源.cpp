@@ -9,29 +9,56 @@
 #include<map>
 #include<queue>
 using namespace std;
-typedef long long int ll;
-const int  N=1000;
+typedef long long int ll; 
 
-int a[3][N][N];
-int num[N];
+const int  N=20010;
+char ansr[N][4] = {0};
+char str[N];
 int main()
 {  
-    int n, Q;
-    scanf("%d %d", &n, &Q);
-    for (int i = 0; i < 3; i++) {
-        for (int q = 0; q < n; q++) {
-            for (int w = 0; w < n; w++) {
-                a[i][q][w] = n;
+    int n, f;
+    scanf("%d %d", &n, &f);
+    scanf("%s", str);
+    int ans = 0;
+    for (char i = 'a'; i <= 'z'; i++) {
+        for (char j = 'a'; j <= 'z'; j++) {
+            if (i != j) {  //0 1 2
+                char m[4] = { i,j,j,'\0'};
+                bool fl[N] = { 0 };
+                int cut=0;
+
+                for (int q = 0; q < n; q++) {
+                    if (str[q] == m[0] && str[q + 1] == m[1] && str[q + 2] == m[2])
+                    {
+                        cut++; 
+                        fl[q] = 1;
+                        fl[q+1] = 1;
+                        fl[q+2] = 1;
+                        q += 2;
+                    }
+                }
+                for (int q = 0; q < n; q++) {
+                    if (fl[q ]||fl[q + 1]||fl[q +2])continue;
+                    if ((str[q + 1] == m[1] && str[q + 2] == m[2])
+                        || (str[q] == m[0] && str[q + 1] == m[1])
+                        || (str[q] == m[0] && str[q + 2] == m[2]))
+                    {
+                         cut++;
+                         break;
+                    }
+                }
+                if (cut >= f) {
+                    ansr[ans][0] = m[0];
+                    ansr[ans][1] = m[1];
+                    ansr[ans][2] = m[2];
+                    ansr[ans][3] = m[3];
+                    ans++;
+                }
             }
         }
     }
-    int ans = 0;
-    for (int q = 0; q < Q; q++) {
-        int x, y, z;
-        scanf("%d %d %d", &x, &y, &z);
-        if(!--a[0][y][z])ans++;
-        if(!--a[1][x][y])ans++;
-        if(!--a[2][x][z])ans++;
-        printf("%d\n", ans);
+    printf("%d\n", ans);
+    for (int i = 0; i < ans; i++) {
+        printf("%s\n", ansr[i]);
     }
 }
