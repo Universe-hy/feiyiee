@@ -1,4 +1,7 @@
-//#include<stdio.h>
+#define _CRT_SECURE_NO_WARNINGS 1
+#pragma warning(disable:6031)
+
+#include <windows.h>
 #include<iostream>
 #include<algorithm>
 #include <stdlib.h>
@@ -6,50 +9,50 @@
 #include<map>
 #include<queue>
 using namespace std;
-typedef long long ll;
-const int N = 200010;
-int n, m;
-ll a[N], b[N];
-int ai[N], idx = 1;
-void cut() {
-	int nidx = 1;
-	for (int i = 1; i < idx; i++) {
-		if (a[ai[i]] > a[ai[nidx - 1]]) {
-			ai[nidx++] = ai[i];
-		}
-	}
-	idx = nidx;
-}
+typedef long long int ll;
 
+const int  N = 1000010;
+
+int num[N];
+int qnum[N];
+
+int sum[N];
+
+ll n, m;
 int main() {
-	cin >> n >> m;
-	for (int i = 0; i < n; i++) {
-		cin >> a[i];
-	}
-	idx = 1;
-	for (int i = 1; i < n; i++) {
-		if (a[i] > a[ai[idx - 1]]) {
-			ai[idx++] = i;
-		}
-	}
-	for (int i = 0; i < m; i++)
-		cin >> b[i];
+    int T;
+    cin >> T;
+    while (T--) {
+        memset(num, 0 ,sizeof(num));
+        memset(qnum, 0, sizeof(qnum));
+        memset(sum, 0, sizeof(sum));
+        cin >> n >> m;
+        int ai,ans=1e9;
+        for (int i = 0; i < n; i++) {
+            cin >> ai;
+            num[ai % m]++;
+        }
 
-	for (int i = 0; i < m; i++) {
-		ll down = 0;
-		for (int q = 0; q < idx; q++) {
-			int top = min(a[ai[q]], b[i]);
-			if (top > down)
-			{
-				a[ai[q]] += top - down;
-				down = top;
-				if (down >= b[i])
-					break;
-			}
-		}
-	}
-	for (int i = 0; i < n; i++) {
-		cout << a[i] << endl;
-	}
-	return 0;
+        //ºó m/2ÏîºÍ
+        for (int i = 0; i < m / 2; i++) {
+            sum[0] += num[i];
+        }
+        for (int i = 0; i < m-1; i++) {
+            sum[i+1] = sum[i] - num[i] + num[(i + m / 2) % m];
+        }
+
+        qnum[0] = 0;
+        for (int i = 1; i < m; i++) {
+            qnum[0] += num[i] * min(i,m-i);
+        }
+
+        ans = qnum[0];
+        for (int x = 1; x < m; x++) {
+            qnum[x] = qnum[x - 1] - sum[x] + sum[((m + 1)/2+x) % m];
+            ans = min(qnum[x], ans);
+        }
+        cout << ans << endl;
+    }
+    return 0;
 }
+
