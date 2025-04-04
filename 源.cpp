@@ -1,7 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS 1
-#pragma warning(disable:6031)
-
-#include <windows.h>
 #include<iostream>
 #include<algorithm>
 #include <stdlib.h>
@@ -11,48 +7,47 @@
 using namespace std;
 typedef long long int ll;
 
-const int  N = 1000010;
+const int  N = 400010;
 
-int num[N];
-int qnum[N];
-
-int sum[N];
-
-ll n, m;
+int a[N], idx;
 int main() {
-    int T;
+    int T, num = 0, min_num = 1e9;
+    char c;
     cin >> T;
-    while (T--) {
-        memset(num, 0 ,sizeof(num));
-        memset(qnum, 0, sizeof(qnum));
-        memset(sum, 0, sizeof(sum));
-        cin >> n >> m;
-        int ai,ans=1e9;
-        for (int i = 0; i < n; i++) {
-            cin >> ai;
-            num[ai % m]++;
-        }
+    getchar();
 
-        //єу m/2ПоєН
-        for (int i = 0; i < m / 2; i++) {
-            sum[0] += num[i];
-        }
-        for (int i = 0; i < m-1; i++) {
-            sum[i+1] = sum[i] - num[i] + num[(i + m / 2) % m];
-        }
-
-        qnum[0] = 0;
-        for (int i = 1; i < m; i++) {
-            qnum[0] += num[i] * min(i,m-i);
-        }
-
-        ans = qnum[0];
-        for (int x = 1; x < m; x++) {
-            qnum[x] = qnum[x - 1] - sum[x] + sum[((m + 1)/2+x) % m];
-            ans = min(qnum[x], ans);
-        }
-        cout << ans << endl;
+    int r_num = 0;
+    while (T-- && (c = getchar()) == '1') {
+        r_num++;
     }
+    while (T--) {
+        c = getchar();
+        if (c == '1') {
+            num++;
+        }
+        else if (num) {
+            a[idx++] = num;
+            min_num = min(num, min_num);
+            num = 0;
+        }
+    }
+    int l_num = num;
+
+    int m = (min_num - 1) / 2 * 2 + 1;
+    if (r_num) {
+        m = min(m, r_num * 2 - 1);
+        a[idx++] = r_num;
+    }
+    if (l_num) {
+        m = min(m, l_num * 2 - 1);
+        a[idx++] = l_num;
+    }
+    int ans = 0;
+
+    for (int i = 0; i <= idx; i++) {
+        ans += a[i] / m + (a[i] % m ? 1 : 0);
+    }
+    cout << ans;
+
     return 0;
 }
-
