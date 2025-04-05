@@ -2,52 +2,44 @@
 #include<algorithm>
 #include <stdlib.h>
 #include<string>
-#include<map>
+#include<math.h>
 #include<queue>
 using namespace std;
 typedef long long int ll;
 
 const int  N = 400010;
 
-int a[N], idx;
+int a[N], h[N], rt[N], idx;
 int main() {
-    int T, num = 0, min_num = 1e9;
-    char c;
-    cin >> T;
-    getchar();
-
-    int r_num = 0;
-    while (T-- && (c = getchar()) == '1') {
-        r_num++;
-    }
-    while (T--) {
-        c = getchar();
-        if (c == '1') {
-            num++;
-        }
-        else if (num) {
-            a[idx++] = num;
-            min_num = min(num, min_num);
-            num = 0;
-        }
-    }
-    int l_num = num;
-
-    int m = (min_num - 1) / 2 * 2 + 1;
-    if (r_num) {
-        m = min(m, r_num * 2 - 1);
-        a[idx++] = r_num;
-    }
-    if (l_num) {
-        m = min(m, l_num * 2 - 1);
-        a[idx++] = l_num;
-    }
-    int ans = 0;
-
-    for (int i = 0; i <= idx; i++) {
-        ans += a[i] / m + (a[i] % m ? 1 : 0);
-    }
-    cout << ans;
-
-    return 0;
+	int T, n;
+	cin >> T;
+	while (T--) {
+		cin >> n;
+		for (int i = 0; i < n; i++) {
+			cin >> h[i];
+		}
+		for (int i = 0; i < n; i++) {
+			cin >> a[i];
+		}
+		int t;
+		for (int i = 0; i < n; i++) {
+			cin >> t;
+			rt[t] = i;
+		}
+		int l = 0, r = 1e9;
+		for (int i = 0; i < n - 1; i++) {
+			double dh = h[rt[i]] - h[rt[i + 1]];
+			double da = a[rt[i + 1]] - a[rt[i]];
+			if (da < 0)
+				l = max(l, (int)floor(dh / da) + 1);
+			else if (da > 0)
+				r = min(r, (int)ceil(dh / da) - 1);
+			else if (dh <= 0) {
+				l = -1;
+				break;
+			}
+		}
+		cout << (r >= l ? l : -1) << endl;
+	}
+	return 0;
 }
