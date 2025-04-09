@@ -1,149 +1,93 @@
-#include<iostream>
-#include<algorithm>
-#include<stdlib.h>
-#include<math.h>
-#include<stack>
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include<vector>
 using namespace std;
-typedef long long int ll;
-
-const int  N = 100010;
-typedef pair<int, int> PII;
-int n, k;
-int map[13][13];
-int f[13][13], f1 = 1, f3 = 1 << 1, f5 = 1 << 2, f7 = 1 << 3;
-stack<int> ans;
-int dfs(int x, int y, int w) {
-	if (map[x][y] != w) {
-		return 0;
+const int M = 10;
+vector<int> w, r, ans;
+int k = 0;
+void w2() {
+	for (int i = 0; i < w.size(); i++) {
+		w[i] *= 2;
 	}
-	int back = map[x][y];
-	map[x][y] = -1;
+	int id = w.size() - 1;
 
-	if (x == n && y == n) {
-		for (int i = 1; i <= n; i++) {
-			for (int q = 1; q <= n; q++) {
-				if (map[i][q] != -1) {
-					map[x][y] = back;
-					return 0;
+	for (int i = 0; i < id; i++)
+	{
+		if (w[i] / M) {
+			w[i + 1] += w[i] / M;
+			w[i] %= M;
+		}
+	}
+
+	if (w[id] / M) {
+		w.push_back(w[id] / M);
+		w[id] %= M;
+	}
+
+}
+
+int main()
+{
+	int n;
+	string R;
+	cin >> n;
+	cin >> R;
+	w.push_back(2);
+	for (int i = 1; i < n; i++)
+	{
+		w2();
+	}
+
+	for (int i = R.size() - 1; i >= 0; i--) {
+		if (R[i] == '.')
+		{
+			k = R.size() - i - 1;
+			continue;
+		}
+		r.push_back(R[i] - '0');
+	}
+
+	for (int i = 0; i < w.size(); i++) {
+		for (int q = 0; q < r.size(); q++) {
+			if (i + q >= ans.size()) {
+				ans.push_back(w[i] * r[q]);
+			}
+			else {
+				ans[i + q] += w[i] * r[q];
+			}
+
+			for (int w = i + q; ans[w] / M; w++) {
+
+				if (w + 1 < ans.size()) {
+					ans[w + 1] += ans[w] / M;
 				}
+				else {
+					ans.push_back(ans[w] / M);
+				}
+				ans[w] %= M;
 			}
 		}
-		return 1;
 	}
 
+	if (ans[k - 1] >= 5) {
+		ans[k]++;
 
-	if (dfs(x - 1, y, (w + 1) % k))
-	{
-		ans.push(0);
-		return 1;
-	}
+		for (int w = k; ans[w] / M; w++) {
 
-	if ((f[x][y] & f1) == 0) {
-
-		int fb1 = f[x - 1][y];
-		int fb2 = f[x][y + 1];
-		f[x - 1][y] |= f3;
-		f[x][y + 1] |= f7;
-
-		if (dfs(x - 1, y + 1, (w + 1) % k))
-		{
-			ans.push(1);
-			return 1;
-		}
-
-		f[x - 1][y] = fb1;
-		f[x][y + 1] = fb2;
-	}
-
-
-	if (dfs(x, y + 1, (w + 1) % k))
-	{
-		ans.push(2);
-		return 1;
-	}
-
-
-	if ((f[x][y] & f3) == 0) {
-		int fb1 = f[x][y + 1];
-		int fb2 = f[x + 1][y];
-
-		f[x][y + 1] |= f5;
-		f[x + 1][y] |= f1;
-
-		if (dfs(x + 1, y + 1, (w + 1) % k))
-		{
-			ans.push(3);
-			return 1;
-		}
-
-		f[x][y + 1] = fb1;
-		f[x + 1][y] = fb2;
-	}
-
-	if (dfs(x + 1, y, (w + 1) % k))
-	{
-		ans.push(4);
-		return 1;
-	}
-
-	if ((f[x][y] & f5) == 0) {
-		int fb1 = f[x][y - 1];
-		int fb2 = f[x + 1][y];
-		f[x][y - 1] |= f3;
-		f[x + 1][y] |= f7;
-
-		if (dfs(x + 1, y - 1, (w + 1) % k))
-		{
-			ans.push(5);
-			return 1;
-		}
-
-		f[x][y - 1] = fb1;
-		f[x + 1][y] = fb2;
-	}
-
-	if (dfs(x, y - 1, (w + 1) % k))
-	{
-		ans.push(6);
-		return 1;
-	}
-
-
-	if ((f[x][y] & f7) == 0) {
-		int fb1 = f[x][y - 1];
-		int fb2 = f[x - 1][y];
-
-		f[x][y - 1] |= f1;
-		f[x - 1][y] |= f5;
-
-		if (dfs(x - 1, y - 1, (w + 1) % k))
-		{
-			ans.push(7);
-			return 1;
-		}
-
-		f[x][y - 1] = fb1;
-		f[x - 1][y] = fb2;
-	}
-
-	map[x][y] = back;
-	return 0;
-}
-int main() {
-	cin >> n >> k;
-	for (int i = 1; i <= n; i++) {
-		for (int q = 1; q <= n; q++) {
-			cin >> map[i][q];
+			if (w + 1 < ans.size()) {
+				ans[w + 1] += ans[w] / M;
+			}
+			else {
+				ans.push_back(ans[w] / M);
+			}
+			ans[w] %= M;
 		}
 	}
-	for (int i = 0; i <= n + 1; i++) {
-		map[0][i] = map[n + 1][i] = map[i][0] = map[i][n + 1] = -1;
+
+	for (int i = ans.size() - 1; i >= k; i--) {
+		cout << ans[i];
 	}
 
-	dfs(1, 1, 0);
-	while (ans.size()) {
-		cout << ans.top();
-		ans.pop();
-	}
 	return 0;
 }
