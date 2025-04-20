@@ -3,57 +3,28 @@
 #include <algorithm>
 
 using namespace std;
-
-string s[2];
+typedef long long ll;
+const int N = 1000300;
+int a[N];
+ll s[N];
 int main()
 {
-    cin >> s[0] >> s[1];
-
-    int be = 0, ed = 0;
-    for (int i = 0; s[0][i]; i++)
-        if (s[0][i] == '#' || s[1][i] == '#')
-        {
-            be = i;
-            break;
-        }
-    for (int i = 0; s[0][i]; i++)
-        if (s[0][i] == '#' || s[1][i] == '#')
-            ed = i;
-
-    int f0 = (s[0][be] == '#');
-    int f1 = (s[1][be] == '#');
-    int f2 = 0;
-    int ans = 0;
-
-
-    for (int i = be + 1; i <= ed; i++)
+    int n, m;
+    cin >> n >> m;
+    for (int i = 0; i < n; i++)
     {
-        int k0 = (s[0][i] == '#'), k1 = (s[1][i] == '#');
-        if ((f0 && k0) || (f1 && k1) || (f2 && (k0 || k1)))
-        {
-            f0 = k0;
-            f1 = k1;
-            f2 = 0;
-        }
-        else
-        {
-            ans++;
-            if (f0 == f1)
-            {
-                f0 = k0;
-                f1 = k1;
-                f2 = 1;
-            }
-            else
-            {
-                f0 = f0 || k0;
-                f1 = f1 || k1;
-                f2 = 0;
-            }
-        }
+        cin >> a[i];
+    }
+    sort(a, a + n);
+    for (int i = 1; i < n; i++)
+    {
+        s[i] = s[i - 1] + (ll)a[i] * a[i] - (ll)a[i - 1] * a[i - 1];
+    }
+    ll ans = (ll)(1e15);
+    for (int i = 0, q = m - 1; q < n; i++, q++)
+    {
+        ans = min(ans, s[q] - s[i]);
     }
     cout << ans;
-
+    return 0;
 }
-
-
