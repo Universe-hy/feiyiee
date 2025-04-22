@@ -1,3 +1,4 @@
+#include<bits/stdc++.h>
 #include<iostream>
 #include<algorithm>
 #include <stdlib.h>
@@ -6,37 +7,34 @@ using namespace std;
 typedef long long ll;
 typedef pair<int, int> PII;
 const int N = 100010;
-const ll M = (ll)1000000007;
-int a[N];
-
-ll xpow(int a, int b)
-{
-	ll ans = 1;
-	while (b) {
-		if (b & 1)ans = ans * a % M;
-		a = (ll)a * a % M;
-		b >>= 1;
-	}
-	return (ans * 2) % M;
-}
+int a[n];
 
 int main()
 {
-	ll n;
+	int n, k;
 	cin >> n;
 	for (int i = 1; i <= n; i++)
 	{
-		cin >> a[i];
+		cin >> k;
+		a[k]++;
 	}
-
-	int e = 0;
-	ll ans = 0;
-	for (int i = 1; i < n; i++)
+	for (int i = 100000; i > 0; i--)
 	{
-		e ^= a[i];
-		ans += (ll)e * xpow(3, n - i - 1) % M;
+		int num = 0;
+		for (ll q = i; q <= 100000; q *= i)
+		{
+			num += a[q];
+		}
+		if (num >= 3)
+		{
+			for (ll q = i; q <= 100000; q *= i)
+			{
+				if (a[q]) {
+					printf("%d ", q);
+				}
+			}
+			break;
+		}
 	}
-	ans += e ^ a[n];
-	cout << ans % M;
 	return 0;
 }
